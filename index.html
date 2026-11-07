@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#3a8fd9">
+<meta name="apple-mobile-web-app-title" content="Что надеть">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+<title>Во что одеться</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@300;500&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark;--ink:#fff;--mute:rgba(255,255,255,.7);--glass:rgba(255,255,255,.14);--line:rgba(255,255,255,.35)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:#3a8fd9}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;min-height:100vh;color:var(--ink);font:400 16px/1.45 Onest,system-ui,sans-serif;background:linear-gradient(170deg,#3a8fd9,#9ad3f0);background-attachment:fixed;transition:background .6s}
+main{max-width:520px;margin:0 auto;padding:16px 18px 40px}
+.search{display:flex;gap:8px;position:relative}
+input{flex:1;min-width:0;border:0;border-radius:14px;padding:12px 14px;font:inherit;color:var(--ink);background:var(--glass);outline:none}
+input::placeholder{color:var(--mute)}
+input:focus-visible,button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+button{font:inherit;color:var(--ink);background:var(--glass);border:0;border-radius:14px;padding:10px 14px;cursor:pointer}
+.res{position:absolute;top:50px;left:0;right:0;z-index:5;background:rgba(20,30,45,.96);border-radius:14px;overflow:hidden}
+.res button{display:block;width:100%;text-align:left;border-radius:0;background:none;padding:12px 14px}
+.chips{display:flex;gap:8px;overflow-x:auto;margin:12px 0 0;padding-bottom:4px}
+.chips button{white-space:nowrap;font-size:14px;padding:6px 12px}
+.gate{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.gate button{padding:26px 10px;font-size:17px;font-weight:600}
+.demo{margin:14px 0 0;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.25);font-size:13px}
+.city{margin:26px 0 0;font-weight:500;font-size:18px}
+.temp{font:300 88px/1 Unbounded,Onest,sans-serif;margin:6px 0 4px;letter-spacing:-.04em}
+.sub{color:var(--mute);margin:0}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:20px 0 0}
+.facts div{background:var(--glass);border-radius:14px;padding:10px 6px;text-align:center;font-size:12px;color:var(--mute)}
+.facts svg{display:block;margin:0 auto 4px;width:20px;height:20px;color:var(--ink)}.facts b{display:block;color:var(--ink);font-size:16px;font-weight:600}
+h2{font:500 20px/1.25 Unbounded,Onest,sans-serif;margin:34px 0 6px}
+.band{color:var(--mute);margin:0 0 14px;font-size:14px}
+.look{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+.look li{display:grid;grid-template-columns:34px 1fr;gap:6px;padding:11px 0 11px 14px}
+.look span{display:flex;justify-content:center;padding-top:2px}
+.look small{display:block;color:var(--mute);font-size:13px}.tag{font-style:normal;font-weight:600;font-size:12px;padding:2px 9px;border-radius:99px;margin-left:8px}.tag.n{background:#fff;color:#1b2a3a}.tag.o{background:rgba(255,255,255,.25);color:#fff}.tag.x{border:1px solid var(--line)}
+.notes{margin:22px 0 0;display:grid;gap:8px}
+.notes p{margin:0;padding:11px 14px;background:var(--glass);border-radius:14px;font-size:14px}
+.parts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.parts div{background:var(--glass);border-radius:16px;padding:12px 10px;font-size:13px}
+.parts b{display:block;font:500 22px Unbounded,Onest,sans-serif;margin:2px 0 6px}
+.parts small{color:var(--mute);display:block;margin-bottom:6px}
+@media (prefers-reduced-motion:reduce){body{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<div class="search"><input id="q" placeholder="Город или регион" aria-label="Поиск города" autocomplete="off"><button id="geo">Где я</button><button id="prof" aria-label="Профиль"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></button><div class="res" id="res" hidden></div></div>
+<div class="chips" id="chips"></div>
+<div id="app"></div>
+</main>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const f=n=>(Math.round(n)>0?'+':Math.round(n)<0?'−':'')+Math.abs(Math.round(n));
+// Шкала по 5°C. Поля: голова | тело | верх | ноги | обувь | мелочи
+const K=[
+"Термобельё из мериноса 200 г/м² и флисовая кофта 300 г/м²|Длинный пуховик 700+ fill power с капюшоном|Термоштаны и утеплённые брюки на мембране|Зимние сапоги до −35°C со съёмным войлочным вкладышем",
+"Термобельё 200 г/м² и свитер грубой вязки|Пуховик до середины бедра|Термоштаны и плотные зимние брюки|Зимние ботинки с мембраной и утеплителем",
+"Термобельё 150 г/м² и плотный шерстяной свитер|Зимняя куртка или пуховик|Тёплые брюки на флисе|Зимние ботинки на толстой подошве",
+"Мериносовый лонгслив и толстый свитер или флисовая кофта|Зимняя куртка средней плотности|Плотные брюки или джинсы на флисе, под них тонкие термолеггинсы|Утеплённые ботинки с протектором",
+"Хлопковый лонгслив 180 г/м² и шерстяной свитер|Тёплая куртка или короткий пуховик|Плотные джинсы или шерстяные брюки|Ботинки на байке или с мембраной",
+"Плотная футболка 200 г/м² и худи|Стёганая куртка или демисезонное пальто|Джинсы или плотные брюки|Кожаные ботинки с мембраной",
+"Плотный хлопковый лонгслив и свитер или худи|Куртка на синтепоне или пальто|Джинсы или брюки из плотной ткани|Утеплённые кроссовки или ботинки",
+"Хлопковый лонгслив 180 г/м² и тонкий свитер|Демисезонная куртка или тренч|Джинсы|Кроссовки с мембраной или ботинки",
+"Плотная футболка 200 г/м² с рубашкой сверху или лонгслив|Ветровка или лёгкая куртка|Джинсы или чиносы|Кроссовки",
+"Футболка 180–200 г/м² и лёгкий кардиган|Худи или джинсовка на вечер|Джинсы или лёгкие брюки|Кроссовки или лоферы",
+"Хлопковая футболка 150–180 г/м²|Лёгкая рубашка в сумку на вечер|Лёгкие брюки или джинсы, шорты по желанию|Лёгкие кроссовки или кеды",
+"Футболка из хлопка или льна 120–150 г/м²|Верхняя одежда не нужна|Шорты или льняные брюки|Дышащие кроссовки с сеткой или сандалии",
+"Свободная льняная футболка или функциональная, светлых тонов|Верхняя одежда не нужна|Лёгкие шорты из льна|Открытые сандалии или лёгкие кроссовки"
+].map(s=>s.split('|'));
+// Головной убор; носки; шарф; перчатки. n = нужно, o = по желанию, x = не нужно
+const A=[
+"n:Ушанка или двойная флисовая шапка, под неё балаклава;n:Толстые шерстяные носки в два слоя;n:Шарф-снуд до носа;n:Варежки поверх тонких перчаток",
+"n:Шерстяная шапка на флисовой подкладке;n:Шерстяные носки 300 г/м²;n:Шерстяной шарф;n:Тёплые перчатки на утеплителе",
+"n:Шапка из мериноса, закрывающая уши;n:Шерстяные носки;n:Шарф;n:Кожаные перчатки на флисе",
+"n:Шапка с подкладкой, закрывающая уши;n:Шерстяные носки;n:Шарф;n:Перчатки",
+"n:Вязаная шапка;n:Шерстяные или термоноски;n:Шарф;n:Тонкие перчатки",
+"o:Лёгкая шапка или повязка на уши;n:Шерстяные носки;o:Тонкий шарф;o:Тонкие перчатки",
+"o:Тонкая шапка, особенно при ветре;n:Плотные хлопковые носки;o:Шарф-снуд;x:Не нужны",
+"o:Кепка или тонкая шапка при ветре;n:Хлопковые носки средней плотности;o:Лёгкий шарф;x:Не нужны",
+"x:Не нужна;n:Хлопковые носки средней плотности;o:Тонкий шарф на вечер;x:Не нужны",
+"x:Не нужна;n:Хлопковые носки;x:Не нужен;x:Не нужны",
+"o:Кепка при ярком солнце;n:Короткие тонкие носки;x:Не нужен;x:Не нужны",
+"n:Кепка или панама из хлопка;n:Тонкие дышащие носки или следки;x:Не нужен;x:Не нужны",
+"n:Панама с широкими полями;o:Тонкие носки из бамбука, при открытой обуви можно без них;x:Не нужен;x:Не нужны"
+].map(r=>r.split(';'));
+const S=p=>'<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>',
+ICON=[S('<path d="M4 15a8 8 0 0 1 16 0"/><path d="M3 15h18v3H3z"/><circle cx="12" cy="4.5" r="1.5"/>'),S('<path d="M8 4 3 7l2 4 3-1v10h8V10l3 1 2-4-5-3a4 4 0 0 1-8 0z"/>'),S('<path d="M9 3 4 6v14h5V10"/><path d="M15 3l5 3v14h-5V10"/><path d="M9 3l3 4 3-4M12 7v13"/>'),S('<path d="M7 3h10l1 18h-4l-2-10-2 10H6z"/>'),S('<path d="M2 17v-4l5-1 3-5 3 3 6 2a3 3 0 0 1 3 3v2z"/><path d="M2 20h21"/>'),S('<path d="M5 8c0-3 14-3 14 0s-14 3-14 0z"/><path d="M9 11v9l3-2 3 2v-9"/>'),S('<path d="M8 3h7v8l5 4a3 3 0 0 1 0 4l-2 2c-1 1-3 1-4 0L8 14z"/><path d="M8 7h7"/>'),S('<path d="M8 21v-6l-2-4V9a1.5 1.5 0 0 1 3 0v2V5a1.5 1.5 0 0 1 3 0v6V4a1.5 1.5 0 0 1 3 0v7V6a1.5 1.5 0 0 1 3 0v8l-1 7z"/>')],
+FI=[S('<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>'),S('<path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16l4-5"/>'),S('<path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h7"/>'),S('<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>')],LBL=['Тело','Верхняя одежда','Ноги','Обувь'],AL=['Головной убор','Носки','Шарф','Перчатки'],AI=[0,6,5,7],TG={n:'Нужно',o:'По желанию',x:'Не нужно'};
+const kOf=e=>Math.max(-6,Math.min(6,Math.floor(e/5)));
+const bandName=k=>k<=-6?'ниже −25°':k>=6?'от +30°':f(k*5)+'…'+f(k*5+5)+'°';
+const adj=(ap,h)=>h>=80&&ap<12?ap-2:h>=70&&ap>=25?ap+2:ap;
+const WTXT=c=>c<2?'Ясно':c<3?'Переменная облачность':c<4?'Пасмурно':c<50?'Туман':c<60?'Морось':c<70?'Дождь':c<80?'Снег':c<83?'Ливни':c<90?'Снегопад':'Гроза';
+const rain=c=>(c>=51&&c<=67)||(c>=80&&c<=82)||c>=95,snow=c=>(c>=71&&c<=77)||c===85||c===86;
+function sky(w){const c=w.code,d=w.day,h=w.ap>=28&&c<3;
+ const t=h?['#e8893a','#f6d37a']:c>=95?['#2a2438','#56506f']:snow(c)?[d?'#7f93ab':'#2b3646',d?'#d6e0ea':'#566478']:rain(c)?[d?'#38495e':'#1a2230',d?'#6f8296':'#2f3b4c']:c>=2?[d?'#5f7a93':'#1c2735',d?'#a9b8c6':'#3a4a5c']:[d?'#3a8fd9':'#0b1d3d',d?'#9ad3f0':'#2b3f7a'];
+ document.body.style.background=`linear-gradient(170deg,${t[0]},${t[1]})`;document.documentElement.style.background=t[0];document.querySelector('meta[name=theme-color]').content=t[0];}
+function notes(w){const n=[],m=new Date().getMonth()+1;
+ if(w.hum>=80&&w.ap<12)n.push(`Влажность ${w.hum}%: сырой холод пробирает сильнее. Образ взят на ступень теплее. Хлопок у тела быстро отсыреет, лучше шерсть или синтетика.`);
+ if(w.hum>=70&&w.ap>=25)n.push(`Влажность ${w.hum}%: душно. Только лён, хлопок или функциональный текстиль, без плотной синтетики.`);
+ if(w.hum<30&&w.ap>=15)n.push(`Сухой воздух (${w.hum}%): увлажняющий крем, гигиеническая помада, пейте больше воды.`);
+ if(w.pp>=50||rain(w.code))n.push(`Дождь (вероятность ${w.pp}%): мембранная куртка или плащ, непромокаемая обувь, складной зонт.`);
+ if(snow(w.code))n.push('Снег: обувь с глубоким протектором и мембраной, куртка с капюшоном, запасные сухие носки.');
+ if(w.gust>=40)n.push(`Порывы до ${Math.round(w.gust)} км/ч: ветрозащитный верх с высоким воротником, шапка и шарф даже при плюсовой температуре.`);
+ if(w.dp<=-4)n.push(`Давление падает на ${Math.abs(Math.round(w.dp))} гПа за 3 часа: возможен резкий фронт. Держите ветро- и влагозащитный слой под рукой.`);
+ if(w.uv>=5)n.push(`УФ-индекс ${Math.round(w.uv)}: очки, головной убор, SPF 30+ на лицо и руки.`);
+ if(w.tmax-w.tmin>=10)n.push(`Перепад за день ${Math.round(w.tmax-w.tmin)}°: одевайтесь слоями, верхний слой должен легко сниматься.`);
+ if(w.elev>1500)n.push(`Высота ${Math.round(w.elev)} м: ветер и УФ сильнее, после заката холодает резко. Возьмите запасной утеплитель.`);
+ if(Math.abs(w.lat)<=23.5)n.push('Тропический пояс: ливни приходят внезапно, лёгкий дождевик всегда в сумке.');
+ if((w.lat>5&&w.lat<=30&&m>=6&&m<=11)||(w.lat<-5&&w.lat>=-30&&(m>=11||m<=4)))n.push('Сезон тропических циклонов: следите за официальными штормовыми предупреждениями местной метеослужбы.');
+ return n;}
+let G=null,LW=null;try{G=localStorage.getItem('g')}catch(e){}
+const FL=[[-9,-4,'Термолеггинсы или плотные колготки 200 den под утеплённые брюки на флисе, юбка и платье в такой мороз не подходят','Зимние сапоги или ботинки с мембраной и меховым вкладышем, подошва с глубоким протектором'],[-3,-1,'Тёплые колготки 120–150 den под шерстяную юбку-миди, либо брюки и джинсы на флисе','Утеплённые ботильоны на устойчивом каблуке или ботинки с мембраной'],[0,2,'Джинсы, брюки или юбка-миди с колготками 80–100 den','Кроссовки, ботильоны или лоферы'],[3,4,'Лёгкие брюки, джинсы или платье-миди, вечером колготки 20–40 den','Кроссовки, балетки или лоферы'],[5,9,'Льняные брюки, шорты, юбка или лёгкое платье из хлопка или вискозы','Дышащие кроссовки, сандалии или босоножки']];
+const fem=(L,k)=>{if(G!=='f')return L;const r=FL.find(x=>k>=x[0]&&k<=x[1]);L=[...L];if(r){L[2]=r[2];L[3]=r[3]}return L};
+function gate(){$('#app').innerHTML='<h2>Для кого подбирать одежду?</h2><p class="band">От этого зависят фасоны, колготки, обувь и аксессуары. Выбор хранится только на вашем устройстве.</p><div class="gate"><button data-g="m">Мужской</button><button data-g="f">Женский</button></div>'}
+function accs(k,w){const a=A[k+6].map(r=>{const i=r.indexOf(':');return{s:r.slice(0,i),t:r.slice(i+1)}});
+ if(w.gust>=40&&k<=3)[0,2].forEach(i=>{if(a[i].s==='o')a[i].s='n'});
+ if(w.uv>=5&&k>=2&&a[0].s!=='n')a[0]={s:'n',t:'Кепка или панама: высокий УФ-индекс'};
+ if(w.hum>=80&&k<=1)a[1].t+=', лучше взять запасную пару';
+ if(G==='f'){if(k>=-1&&k<=2&&a[2].s!=='x')a[2].t='Палантин или шерстяной платок';if(k===-1)a[3].t='Тонкие кожаные перчатки'}
+ return a;}
+function render(w){
+ LW=w;if(!G){sky(w);gate();return}
+ const e=adj(w.ap,w.hum),k=kOf(e),L=fem(K[k+6],k),AC=accs(k,w);sky(w);
+ const parts=w.parts.map((p,i)=>{const kk=kOf(adj(p,w.hum));return `<div><small>${['Утро','День','Вечер'][i]}</small><b>${f(p)}°</b>${esc(K[kk+6][1])}</div>`}).join('');
+ $('#app').innerHTML=(w.live?'':'<p class="demo">Демо-данные по Москве. Здесь нет доступа к Open-Meteo, поэтому выбор города не работает: на вашем хостинге он заработает с живой погодой.</p>')+
+ `<p class="city">${esc(w.city)}</p><p class="temp">${f(w.t)}°</p><p class="sub">${WTXT(w.code)}, ощущается как ${f(w.ap)}°</p>
+ <div class="facts"><div>${FI[0]}<b>${w.hum}%</b>влажность</div><div>${FI[1]}<b>${Math.round(w.pres*.75006)}</b>мм рт. ст.</div><div>${FI[2]}<b>${Math.round(w.gust)}</b>порывы, км/ч</div><div>${FI[3]}<b>${Math.round(w.uv)}</b>УФ</div></div>
+ <h2>Что надеть</h2><p class="band">Расчётная температура ${f(e)}°, образ для диапазона ${bandName(k)}</p>
+ <ul class="look">${L.map((t,i)=>`<li><span>${ICON[i+1]}</span><div><small>${LBL[i]}</small>${esc(t)}</div></li>`).join('')}</ul>
+ <h2>Головной убор, носки, шарф</h2><p class="band">Пометка показывает, нужна ли вещь в такую погоду</p>
+ <ul class="look">${AC.map((x,i)=>`<li${x.s==='x'?' style="opacity:.65"':''}><span>${ICON[AI[i]]}</span><div><small>${AL[i]}<em class="tag ${x.s}">${TG[x.s]}</em></small>${esc(x.t)}</div></li>`).join('')}</ul>
+ <h2>Особенности сегодня</h2><div class="notes">${notes(w).map(t=>`<p>${esc(t)}</p>`).join('')||'<p>Особых предупреждений нет.</p>'}</div>
+ <h2>Верхняя одежда в течение дня</h2><div class="parts">${parts}</div>`;}
+const DEMO={city:'Москва',lat:55.75,lon:37.62,elev:150,t:6,ap:3,hum:88,pres:1004,dp:-7,gust:38,uv:1,pp:70,code:61,day:true,tmax:8,tmin:2,parts:[1,5,3],live:false};
+async function load(lat,lon,city){
+ try{const c=new AbortController();setTimeout(()=>c.abort(),7000);
+  const u=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,surface_pressure,wind_gusts_10m,weather_code,is_day&hourly=apparent_temperature,surface_pressure,precipitation_probability,uv_index&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=2`;
+  const d=await (await fetch(u,{signal:c.signal})).json(),cu=d.current,h=parseInt(cu.time.slice(11,13)),H=d.hourly;
+  const day=H.uv_index.slice(0,24);
+  render({city,lat,lon,elev:d.elevation,t:cu.temperature_2m,ap:cu.apparent_temperature,hum:cu.relative_humidity_2m,pres:cu.surface_pressure,dp:H.surface_pressure[h+3]-H.surface_pressure[h],gust:cu.wind_gusts_10m,uv:Math.max(...day),pp:Math.max(...H.precipitation_probability.slice(h,24)),code:cu.weather_code,day:!!cu.is_day,tmax:d.daily.temperature_2m_max[0],tmin:d.daily.temperature_2m_min[0],parts:[8,14,20].map(i=>H.apparent_temperature[i]),live:true});
+  try{localStorage.setItem('last',JSON.stringify({lat,lon,city}))}catch(e){}
+ }catch(e){render(DEMO)}}
+async function find(name){
+ try{const r=await (await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(name)}&count=5&language=ru`)).json();return r.results||[]}catch(e){return null}}
+const res=$('#res');
+$('#q').addEventListener('keydown',async ev=>{if(ev.key!=='Enter')return;const n=ev.target.value.trim();if(!n)return;
+ const r=await find(n);if(r===null){load(0,0,n);return}
+ res.innerHTML=r.length?r.map((x,i)=>`<button data-i="${i}">${esc(x.name)}, ${esc(x.admin1||x.country||'')}</button>`).join(''):'<button disabled>Ничего не найдено</button>';res.hidden=false;
+ res.onclick=e=>{const b=e.target.closest('button[data-i]');if(!b)return;const x=r[b.dataset.i];res.hidden=true;load(x.latitude,x.longitude,x.name)}});
+$('#geo').onclick=()=>navigator.geolocation&&navigator.geolocation.getCurrentPosition(p=>load(p.coords.latitude,p.coords.longitude,'Моё местоположение'),()=>{});
+$('#chips').innerHTML=['Москва','Сочи','Якутск','Франкфурт','Бангкок','Дубай'].map(c=>`<button>${c}</button>`).join('');
+$('#chips').onclick=async e=>{if(e.target.tagName!=='BUTTON')return;const r=await find(e.target.textContent);r&&r[0]?load(r[0].latitude,r[0].longitude,r[0].name):load(0,0,e.target.textContent)};
+$('#app').addEventListener('click',e=>{const b=e.target.closest('button[data-g]');if(!b)return;G=b.dataset.g;try{localStorage.setItem('g',G)}catch(x){}LW&&render(LW)});
+$('#prof').onclick=()=>{G=null;LW&&render(LW)};
+let last=null;try{last=JSON.parse(localStorage.getItem('last'))}catch(e){}
+last?load(last.lat,last.lon,last.city):load(DEMO.lat,DEMO.lon,DEMO.city);
+</script>
+</body>
+</html>
