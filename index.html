@@ -39,7 +39,7 @@ h2{font:500 20px/1.25 Unbounded,Onest,sans-serif;margin:34px 0 6px}
 .look{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
 .look li{display:grid;grid-template-columns:34px 1fr;gap:6px;padding:11px 0 11px 14px}
 .look span{display:flex;justify-content:center;padding-top:2px}
-.look small{display:block;color:var(--mute);font-size:13px}.tag{font-style:normal;font-weight:600;font-size:12px;padding:2px 9px;border-radius:99px;margin-left:8px}.tag.n{background:#fff;color:#1b2a3a}.tag.o{background:rgba(255,255,255,.25);color:#fff}.tag.x{border:1px solid var(--line)}
+.look small{display:block;color:var(--mute);font-size:13px}.look .alt{margin-top:4px;font-style:italic}.tag{font-style:normal;font-weight:600;font-size:12px;padding:2px 9px;border-radius:99px;margin-left:8px}.tag.n{background:#fff;color:#1b2a3a}.tag.o{background:rgba(255,255,255,.25);color:#fff}.tag.x{border:1px solid var(--line)}
 .notes{margin:22px 0 0;display:grid;gap:8px}
 .notes p{margin:0;padding:11px 14px;background:var(--glass);border-radius:14px;font-size:14px}
 .parts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -102,7 +102,7 @@ function sky(w){const c=w.code,d=w.day,h=w.ap>=28&&c<3;
  const t=h?['#e8893a','#f6d37a']:c>=95?['#2a2438','#56506f']:snow(c)?[d?'#7f93ab':'#2b3646',d?'#d6e0ea':'#566478']:rain(c)?[d?'#38495e':'#1a2230',d?'#6f8296':'#2f3b4c']:c>=2?[d?'#5f7a93':'#1c2735',d?'#a9b8c6':'#3a4a5c']:[d?'#3a8fd9':'#0b1d3d',d?'#9ad3f0':'#2b3f7a'];
  document.body.style.background=`linear-gradient(170deg,${t[0]},${t[1]})`;document.documentElement.style.background=t[0];document.querySelector('meta[name=theme-color]').content=t[0];}
 function notes(w){const n=[],m=new Date().getMonth()+1;
- if(w.hum>=80&&w.ap<12)n.push(`Влажность ${w.hum}%: сырой холод пробирает сильнее. Образ взят на ступень теплее. Хлопок у тела быстро отсыреет, лучше шерсть или синтетика.`);
+ if(w.hum>=80&&w.ap<12)n.push(`Влажность ${w.hum}%: сырой холод пробирает сильнее. Образ подобран как для температуры на 2° ниже ощущаемой. Хлопок у тела быстро отсыреет, лучше шерсть или синтетика.`);
  if(w.hum>=70&&w.ap>=25)n.push(`Влажность ${w.hum}%: душно. Только лён, хлопок или функциональный текстиль, без плотной синтетики.`);
  if(w.hum<30&&w.ap>=15)n.push(`Сухой воздух (${w.hum}%): увлажняющий крем, гигиеническая помада, пейте больше воды.`);
  if(w.pp>=50||rain(w.code))n.push(`Дождь (вероятность ${w.pp}%): мембранная куртка или плащ, непромокаемая обувь, складной зонт.`);
@@ -117,6 +117,9 @@ function notes(w){const n=[],m=new Date().getMonth()+1;
  return n;}
 let G=null,LW=null;try{G=localStorage.getItem('g')}catch(e){}
 const FL=[[-9,-4,'Термолеггинсы или плотные колготки 200 den под утеплённые брюки на флисе, юбка и платье в такой мороз не подходят','Зимние сапоги или ботинки с мембраной и меховым вкладышем, подошва с глубоким протектором'],[-3,-1,'Тёплые колготки 120–150 den под шерстяную юбку-миди, либо брюки и джинсы на флисе','Утеплённые ботильоны на устойчивом каблуке или ботинки с мембраной'],[0,2,'Джинсы, брюки или юбка-миди с колготками 80–100 den','Кроссовки, ботильоны или лоферы'],[3,4,'Лёгкие брюки, джинсы или платье-миди, вечером колготки 20–40 den','Кроссовки, балетки или лоферы'],[5,9,'Льняные брюки, шорты, юбка или лёгкое платье из хлопка или вискозы','Дышащие кроссовки, сандалии или босоножки']];
+const ALT=k=>{const a=k<=-3?['Флисовая толстовка или шерстяная водолазка вместо свитера','Парка с натуральным или синтетическим утеплителем вместо пуховика','Утеплённые трекинговые или горнолыжные штаны','Дутики или трекинговые ботинки с утеплителем']:k<=0?['Шерстяная водолазка или флис вместо свитера','Утеплённый бомбер, парка или шерстяное пальто','Вельветовые или шерстяные брюки вместо джинсов','Кожаные кроссовки на плотной подошве или ботинки-челси']:k<=3?['Рубашка с тонким джемпером или поло с длинным рукавом','Бомбер, джинсовка, кардиган-пальто или софтшелл','Чиносы, вельвет или карго вместо джинсов','Кеды, лоферы или ботинки-челси']:['Поло, рубашка с коротким рукавом или майка из льна','Тонкая рубашка навыпуск вместо кардигана','Бермуды, чиносы из тонкого хлопка или лёгкие карго-шорты','Текстильные кеды, слипоны или спортивные сандалии'];
+ return G==='f'?[a[0],a[1],k<=0?'Тёплая юбка-миди или платье-свитер с плотными колготками':k<=3?'Юбка-миди или платье с колготками':'Лёгкая юбка, платье-рубашка или сарафан',k<=-3?'Угги или дутики':k<=0?'Челси-ботинки, кожаные кроссовки или ботильоны':k<=3?'Лоферы, балетки или кеды':'Босоножки, слипоны или тканевые кеды']:a};
+const ALA=k=>k<=0?['Бафф, балаклава или капюшон вместо шапки','Термоноски из мериноса, под них тонкие хлопковые','Бафф или снуд вместо шарфа','Варежки или перчатки с мембраной']:['Бейсболка, бандана или шляпа','Тонкие спортивные носки или следки','Лёгкий платок или бафф',''];
 const fem=(L,k)=>{if(G!=='f')return L;const r=FL.find(x=>k>=x[0]&&k<=x[1]);L=[...L];if(r){L[2]=r[2];L[3]=r[3]}return L};
 function gate(){$('#app').innerHTML='<h2>Для кого подбирать одежду?</h2><p class="band">От этого зависят фасоны, колготки, обувь и аксессуары. Выбор хранится только на вашем устройстве.</p><div class="gate"><button data-g="m">Мужской</button><button data-g="f">Женский</button></div>'}
 function accs(k,w){const a=A[k+6].map(r=>{const i=r.indexOf(':');return{s:r.slice(0,i),t:r.slice(i+1)}});
@@ -132,10 +135,10 @@ function render(w){
  $('#app').innerHTML=(w.live?'':'<p class="demo">Демо-данные по Москве. Здесь нет доступа к Open-Meteo, поэтому выбор города не работает: на вашем хостинге он заработает с живой погодой.</p>')+
  `<p class="city">${esc(w.city)}</p><p class="temp">${f(w.t)}°</p><p class="sub">${WTXT(w.code)}, ощущается как ${f(w.ap)}°</p>
  <div class="facts"><div>${FI[0]}<b>${w.hum}%</b>влажность</div><div>${FI[1]}<b>${Math.round(w.pres*.75006)}</b>мм рт. ст.</div><div>${FI[2]}<b>${Math.round(w.gust)}</b>порывы, км/ч</div><div>${FI[3]}<b>${Math.round(w.uv)}</b>УФ</div></div>
- <h2>Что надеть</h2><p class="band">Расчётная температура ${f(e)}°, образ для диапазона ${bandName(k)}</p>
- <ul class="look">${L.map((t,i)=>`<li><span>${ICON[i+1]}</span><div><small>${LBL[i]}</small>${esc(t)}</div></li>`).join('')}</ul>
+ <h2>Что надеть</h2><p class="band">${e<w.ap?`Влажность ${w.hum}% усиливает холод (${f(e-w.ap)}°), поэтому образ подобран как для ${f(e)}°`:e>w.ap?`Влажность ${w.hum}% усиливает жару (+${Math.round(e-w.ap)}°), поэтому образ подобран как для ${f(e)}°`:`Образ подобран по ощущаемой температуре ${f(e)}°`}. Диапазон ${bandName(k)}.</p>
+ <ul class="look">${L.map((t,i)=>`<li><span>${ICON[i+1]}</span><div><small>${LBL[i]}</small>${esc(t)}<small class="alt">Аналог: ${esc(ALT(k)[i])}</small></div></li>`).join('')}</ul>
  <h2>Головной убор, носки, шарф</h2><p class="band">Пометка показывает, нужна ли вещь в такую погоду</p>
- <ul class="look">${AC.map((x,i)=>`<li${x.s==='x'?' style="opacity:.65"':''}><span>${ICON[AI[i]]}</span><div><small>${AL[i]}<em class="tag ${x.s}">${TG[x.s]}</em></small>${esc(x.t)}</div></li>`).join('')}</ul>
+ <ul class="look">${AC.map((x,i)=>`<li${x.s==='x'?' style="opacity:.65"':''}><span>${ICON[AI[i]]}</span><div><small>${AL[i]}<em class="tag ${x.s}">${TG[x.s]}</em></small>${esc(x.t)}${x.s!=='x'&&ALA(k)[i]?`<small class="alt">Аналог: ${esc(ALA(k)[i])}</small>`:''}</div></li>`).join('')}</ul>
  <h2>Особенности сегодня</h2><div class="notes">${notes(w).map(t=>`<p>${esc(t)}</p>`).join('')||'<p>Особых предупреждений нет.</p>'}</div>
  <h2>Верхняя одежда в течение дня</h2><div class="parts">${parts}</div>`;}
 const DEMO={city:'Москва',lat:55.75,lon:37.62,elev:150,t:6,ap:3,hum:88,pres:1004,dp:-7,gust:38,uv:1,pp:70,code:61,day:true,tmax:8,tmin:2,parts:[1,5,3],live:false};
