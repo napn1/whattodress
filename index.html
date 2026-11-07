@@ -26,6 +26,8 @@ button{font:inherit;color:var(--ink);background:var(--glass);border:0;border-rad
 .res button{display:block;width:100%;text-align:left;border-radius:0;background:none;padding:12px 14px}
 .chips{display:flex;gap:8px;overflow-x:auto;margin:12px 0 0;padding-bottom:4px}
 .chips button{white-space:nowrap;font-size:14px;padding:6px 12px}
+.modes{display:flex;gap:8px;overflow-x:auto;margin:18px 0 0;padding-bottom:4px}.modes button{white-space:nowrap;font-size:14px;padding:7px 14px}.modes button[aria-pressed=true]{background:#fff;color:#1b2a3a;font-weight:600}
+.opts{display:grid;gap:8px;margin:8px 0}.opts button{padding:12px}.lnk{margin-top:6px;font-size:13px;padding:6px 12px}.alert{margin:12px 0 0;padding:11px 14px;border-radius:14px;background:#fff;color:#1b2a3a;font-size:14px;font-weight:500}
 .gate{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.gate button{padding:26px 10px;font-size:17px;font-weight:600}
 .demo{margin:14px 0 0;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.25);font-size:13px}
 .city{margin:26px 0 0;font-weight:500;font-size:18px}
@@ -91,8 +93,8 @@ const A=[
 "n:Панама с широкими полями;o:Тонкие носки из бамбука, при открытой обуви можно без них;x:Не нужен;x:Не нужны"
 ].map(r=>r.split(';'));
 const S=p=>'<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>',
-ICON=[S('<path d="M4 15a8 8 0 0 1 16 0"/><path d="M3 15h18v3H3z"/><circle cx="12" cy="4.5" r="1.5"/>'),S('<path d="M8 4 3 7l2 4 3-1v10h8V10l3 1 2-4-5-3a4 4 0 0 1-8 0z"/>'),S('<path d="M9 3 4 6v14h5V10"/><path d="M15 3l5 3v14h-5V10"/><path d="M9 3l3 4 3-4M12 7v13"/>'),S('<path d="M7 3h10l1 18h-4l-2-10-2 10H6z"/>'),S('<path d="M2 17v-4l5-1 3-5 3 3 6 2a3 3 0 0 1 3 3v2z"/><path d="M2 20h21"/>'),S('<path d="M5 8c0-3 14-3 14 0s-14 3-14 0z"/><path d="M9 11v9l3-2 3 2v-9"/>'),S('<path d="M8 3h7v8l5 4a3 3 0 0 1 0 4l-2 2c-1 1-3 1-4 0L8 14z"/><path d="M8 7h7"/>'),S('<path d="M8 21v-6l-2-4V9a1.5 1.5 0 0 1 3 0v2V5a1.5 1.5 0 0 1 3 0v6V4a1.5 1.5 0 0 1 3 0v7V6a1.5 1.5 0 0 1 3 0v8l-1 7z"/>')],
-FI=[S('<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>'),S('<path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16l4-5"/>'),S('<path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h7"/>'),S('<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>')],LBL=['Тело','Верхняя одежда','Ноги','Обувь'],AL=['Головной убор','Носки','Шарф','Перчатки'],AI=[0,6,5,7],TG={n:'Нужно',o:'По желанию',x:'Не нужно'};
+ICON=[S('<path d="M4 15a8 8 0 0 1 16 0"/><path d="M3 15h18v3H3z"/><circle cx="12" cy="4.5" r="1.5"/>'),S('<path d="M8 4 3 7l2 4 3-1v10h8V10l3 1 2-4-5-3a4 4 0 0 1-8 0z"/>'),S('<path d="M9 3 4 6v14h5V10"/><path d="M15 3l5 3v14h-5V10"/><path d="M9 3l3 4 3-4M12 7v13"/>'),S('<path d="M7 3h10l1 18h-4l-2-10-2 10H6z"/>'),S('<path d="M2 17v-4l5-1 3-5 3 3 6 2a3 3 0 0 1 3 3v2z"/><path d="M2 20h21"/>'),S('<path d="M5 8c0-3 14-3 14 0s-14 3-14 0z"/><path d="M9 11v9l3-2 3 2v-9"/>'),S('<path d="M8 3h7v8l5 4a3 3 0 0 1 0 4l-2 2c-1 1-3 1-4 0L8 14z"/><path d="M8 7h7"/>'),S('<path d="M8 21v-6l-2-4V9a1.5 1.5 0 0 1 3 0v2V5a1.5 1.5 0 0 1 3 0v6V4a1.5 1.5 0 0 1 3 0v7V6a1.5 1.5 0 0 1 3 0v8l-1 7z"/>'),S('<circle cx="7" cy="14" r="3.5"/><circle cx="17" cy="14" r="3.5"/><path d="M10.5 14h3M3.5 14 5 7M20.5 14 19 7"/>')],
+FI=[S('<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>'),S('<path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16l4-5"/>'),S('<path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h7"/>'),S('<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>')],LBL=['Тело','Верхняя одежда','Ноги','Обувь'],AL=['Головной убор','Носки','Шарф','Перчатки','Солнцезащитные очки'],AI=[0,6,5,7,8],TG={n:'Нужно',o:'По желанию',x:'Не нужно'};
 const kOf=e=>Math.max(-6,Math.min(6,Math.floor(e/5)));
 const bandName=k=>k<=-6?'ниже −25°':k>=6?'от +30°':f(k*5)+'…'+f(k*5+5)+'°';
 const adj=(ap,h)=>h>=80&&ap<12?ap-2:h>=70&&ap>=25?ap+2:ap;
@@ -102,6 +104,10 @@ function sky(w){const c=w.code,d=w.day,h=w.ap>=28&&c<3;
  const t=h?['#e8893a','#f6d37a']:c>=95?['#2a2438','#56506f']:snow(c)?[d?'#7f93ab':'#2b3646',d?'#d6e0ea':'#566478']:rain(c)?[d?'#38495e':'#1a2230',d?'#6f8296':'#2f3b4c']:c>=2?[d?'#5f7a93':'#1c2735',d?'#a9b8c6':'#3a4a5c']:[d?'#3a8fd9':'#0b1d3d',d?'#9ad3f0':'#2b3f7a'];
  document.body.style.background=`linear-gradient(170deg,${t[0]},${t[1]})`;document.documentElement.style.background=t[0];document.querySelector('meta[name=theme-color]').content=t[0];}
 function notes(w){const n=[],m=new Date().getMonth()+1;
+ if(M==='run')n.push('Бег: образ рассчитан так, будто на улице на 6° теплее, вы согреетесь за 5–10 минут. На старте должно быть слегка прохладно. После бега сразу наденьте сухую одежду.');
+ if(M==='bike')n.push('Велосипед: на скорости около 20 км/ч ветер забирает тепло сильнее, поэтому ветрозащита обязательна. Шлем, светоотражающие элементы и очки от ветра и пыли.');
+ if(M==='office')n.push('Офис: в помещении обычно тепло, поэтому верхний слой должен легко сниматься. В сырую погоду возьмите сменную обувь.');
+ if(M==='evening')n.push('Вечер: после заката обычно заметно холоднее, возьмите слой на вечер.');
  if(w.hum>=80&&w.ap<12)n.push(`Влажность ${w.hum}%: сырой холод пробирает сильнее. Образ подобран как для температуры на 2° ниже ощущаемой. Хлопок у тела быстро отсыреет, лучше шерсть или синтетика.`);
  if(w.hum>=70&&w.ap>=25)n.push(`Влажность ${w.hum}%: душно. Только лён, хлопок или функциональный текстиль, без плотной синтетики.`);
  if(w.hum<30&&w.ap>=15)n.push(`Сухой воздух (${w.hum}%): увлажняющий крем, гигиеническая помада, пейте больше воды.`);
@@ -115,11 +121,32 @@ function notes(w){const n=[],m=new Date().getMonth()+1;
  if(Math.abs(w.lat)<=23.5)n.push('Тропический пояс: ливни приходят внезапно, лёгкий дождевик всегда в сумке.');
  if((w.lat>5&&w.lat<=30&&m>=6&&m<=11)||(w.lat<-5&&w.lat>=-30&&(m>=11||m<=4)))n.push('Сезон тропических циклонов: следите за официальными штормовыми предупреждениями местной метеослужбы.');
  return n;}
-let G=null,LW=null;try{G=localStorage.getItem('g')}catch(e){}
+let G=null,LW=null,M='daily';try{G=localStorage.getItem('g');M=localStorage.getItem('m')||'daily'}catch(e){}
 const FL=[[-9,-4,'Термолеггинсы или плотные колготки 200 den под утеплённые брюки на флисе, юбка и платье в такой мороз не подходят','Зимние сапоги или ботинки с мембраной и меховым вкладышем, подошва с глубоким протектором'],[-3,-1,'Тёплые колготки 120–150 den под шерстяную юбку-миди, либо брюки и джинсы на флисе','Утеплённые ботильоны на устойчивом каблуке или ботинки с мембраной'],[0,2,'Джинсы, брюки или юбка-миди с колготками 80–100 den','Кроссовки, ботильоны или лоферы'],[3,4,'Лёгкие брюки, джинсы или платье-миди, вечером колготки 20–40 den','Кроссовки, балетки или лоферы'],[5,9,'Льняные брюки, шорты, юбка или лёгкое платье из хлопка или вискозы','Дышащие кроссовки, сандалии или босоножки']];
 const ALT=k=>{const a=k<=-3?['Флисовая толстовка или шерстяная водолазка вместо свитера','Парка с натуральным или синтетическим утеплителем вместо пуховика','Утеплённые трекинговые или горнолыжные штаны','Дутики или трекинговые ботинки с утеплителем']:k<=0?['Шерстяная водолазка или флис вместо свитера','Утеплённый бомбер, парка или шерстяное пальто','Вельветовые или шерстяные брюки вместо джинсов','Кожаные кроссовки на плотной подошве или ботинки-челси']:k<=3?['Рубашка с тонким джемпером или поло с длинным рукавом','Бомбер, джинсовка, кардиган-пальто или софтшелл','Чиносы, вельвет или карго вместо джинсов','Кеды, лоферы или ботинки-челси']:['Поло, рубашка с коротким рукавом или майка из льна','Тонкая рубашка навыпуск вместо кардигана','Бермуды, чиносы из тонкого хлопка или лёгкие карго-шорты','Текстильные кеды, слипоны или спортивные сандалии'];
  return G==='f'?[a[0],a[1],k<=0?'Тёплая юбка-миди или платье-свитер с плотными колготками':k<=3?'Юбка-миди или платье с колготками':'Лёгкая юбка, платье-рубашка или сарафан',k<=-3?'Угги или дутики':k<=0?'Челси-ботинки, кожаные кроссовки или ботильоны':k<=3?'Лоферы, балетки или кеды':'Босоножки, слипоны или тканевые кеды']:a};
 const ALA=k=>k<=0?['Бафф, балаклава или капюшон вместо шапки','Термоноски из мериноса, под них тонкие хлопковые','Бафф или снуд вместо шарфа','Варежки или перчатки с мембраной']:['Бейсболка, бандана или шляпа','Тонкие спортивные носки или следки','Лёгкий платок или бафф',''];
+const MO={
+office:[['Рубашка из плотного хлопка и тонкий мериносовый джемпер','Шерстяное пальто или классическая парка','Шерстяные брюки классического кроя','Кожаные ботинки на устойчивой подошве с водоотталкивающей пропиткой'],['Рубашка или тонкая водолазка, сверху лёгкий пиджак или кардиган','Тренч или лёгкое пальто','Чиносы или брюки из лёгкой шерсти','Дерби, лоферы или минималистичные кожаные кеды'],['Льняная или хлопковая рубашка, поло','Лёгкий льняной пиджак в сумку на случай кондиционера','Лёгкие брюки из льна или хлопка','Лоферы или мокасины']],
+evening:[['Тонкая водолазка или рубашка с джемпером','Тёплое пальто или удлинённая парка','Тёмные брюки из плотной ткани или джинсы','Кожаные ботинки на подошве с протектором'],['Рубашка или тонкий трикотаж','Кожаная куртка, бомбер или пальто','Тёмные джинсы или чиносы','Челси-ботинки или аккуратные кожаные кеды'],['Рубашка из льна или лёгкий топ','Лёгкая куртка или накидка на прохладный вечер','Лёгкие брюки, шорты или тёмные джинсы','Лоферы, кеды или босоножки']],
+run:[['Термо-лонгслив 120–150 г/м² из мериноса или синтетики, не хлопок','Лёгкая беговая куртка с ветрозащитой и светоотражателями','Беговые тайтсы с ветрозащитными вставками спереди','Кроссовки с агрессивным протектором и носки из мериноса'],['Беговая футболка из влагоотводящего полотна','Лёгкий жилет или ветровка, убирается в пояс','Беговые шорты или тайтсы 7/8','Беговые кроссовки с амортизацией, тонкие беговые носки'],['Лёгкая беговая майка с сетчатыми зонами','Не нужна','Лёгкие беговые шорты с внутренним слоем','Дышащие беговые кроссовки с сеткой, носки без швов']],
+bike:[['Термобельё и флисовая велокофта 200 г/м²','Ветрозащитная велокуртка с мембраной и светоотражателями','Утеплённые велотайтсы с ветрозащитой спереди','Велообувь или ботинки с мембраной, бахилы от ветра и воды'],['Велофутболка или тонкий лонгслив','Ветровка или жилет, убирается в карман на спине','Велошорты или брюки без свободных штанин','Кроссовки с жёсткой подошвой, тонкие носки'],['Лёгкая велофутболка из синтетики','Не нужна','Велошорты со вставкой','Дышащие кроссовки или велотуфли']]};
+const OFFS={run:6,bike:2};
+const today=()=>new Date().toLocaleDateString('sv');
+let P=0,HS=[],SV=null,SW=null;try{P=+localStorage.getItem('p')||0;HS=JSON.parse(localStorage.getItem('h')||'[]')}catch(e){}
+const OF=()=>(OFFS[M]||0)+P,pf=()=>(P>0?'+':'−')+String(Math.abs(P)).replace('.',','),save=()=>{try{localStorage.setItem('p',P);localStorage.setItem('h',JSON.stringify(HS.slice(-30)))}catch(e){}};
+function rate(wr,fe){const D={cold:{rec:-2,warm:-3,light:-1},ok:{rec:0,warm:-2,light:2},hot:{rec:2,warm:1,light:3}},t=today(),old=HS.find(x=>x.d===t);
+ if(old&&old.dl)P-=old.dl;HS=HS.filter(x=>x.d!==t);
+ const learn=wr!=='own'&&(M==='daily'||M==='office'||M==='evening'),dl=learn?0.5*D[fe][wr]:0;
+ P=Math.max(-6,Math.min(6,P+dl));HS.push({d:t,wr,fe,learn,dl});save()}
+function survey(){const en=HS.find(x=>x.d===today()),FE={cold:'замёрз',ok:'нормально',hot:'было жарко'},WL={rec:'как советовало приложение',warm:'теплее',light:'легче',own:'по-своему'},up=v=>v[0].toUpperCase()+v.slice(1);let b;
+ if(SV==='w')b=`<p class="band">Что вы надели сегодня?</p><div class="opts">${Object.entries(WL).map(([k,v])=>`<button data-w="${k}">${up(v)}</button>`).join('')}</div>`;
+ else if(SV==='f')b=`<p class="band">Как вам было на улице?</p><div class="opts">${Object.entries(FE).map(([k,v])=>`<button data-f="${k}">${up(v)}</button>`).join('')}</div>`;
+ else b=en?`<p class="band">Сегодня: оделись ${WL[en.wr]}, ${FE[en.fe]}. ${en.learn?'Учтено в ваших настройках.':'В настройках не учтено: оценка не меняет подбор в режимах «Бег» и «Велосипед» или при ответе «по-своему».'}</p><button data-s="1">Изменить оценку</button>`:`<p class="band">Ответьте на два вопроса, и приложение подстроится под вашу чувствительность к холоду.</p><button data-s="1">Оценить день</button>`;
+ return `<h2>Как прошёл день?</h2>${b}${Math.abs(P)>=.5?`<p class="band">Ваша поправка: ${pf()}° (${P>0?'советы чуть легче':'советы чуть теплее'}).</p><button data-r="1" class="lnk">Сбросить настройку</button>`:''}`}
+
+const over=(L,k)=>{const m=MO[M];if(!m)return L;const g=k<=0?0:k<=3?1:2;L=[...L];m[g].forEach((t,i)=>{if(i<2||G!=='f'||M==='run'||M==='bike')L[i]=t});return L};
+const MODES=[['daily','Повседневно'],['office','Офис'],['evening','Вечер'],['run','Бег'],['bike','Велосипед']];
 const fem=(L,k)=>{if(G!=='f')return L;const r=FL.find(x=>k>=x[0]&&k<=x[1]);L=[...L];if(r){L[2]=r[2];L[3]=r[3]}return L};
 function gate(){$('#app').innerHTML='<h2>Для кого подбирать одежду?</h2><p class="band">От этого зависят фасоны, колготки, обувь и аксессуары. Выбор хранится только на вашем устройстве.</p><div class="gate"><button data-g="m">Мужской</button><button data-g="f">Женский</button></div>'}
 function accs(k,w){const a=A[k+6].map(r=>{const i=r.indexOf(':');return{s:r.slice(0,i),t:r.slice(i+1)}});
@@ -127,27 +154,39 @@ function accs(k,w){const a=A[k+6].map(r=>{const i=r.indexOf(':');return{s:r.slic
  if(w.uv>=5&&k>=2&&a[0].s!=='n')a[0]={s:'n',t:'Кепка или панама: высокий УФ-индекс'};
  if(w.hum>=80&&k<=1)a[1].t+=', лучше взять запасную пару';
  if(G==='f'){if(k>=-1&&k<=2&&a[2].s!=='x')a[2].t='Палантин или шерстяной платок';if(k===-1)a[3].t='Тонкие кожаные перчатки'}
+ if(M==='bike'&&k<=3)a[3]={s:'n',t:'Велоперчатки с ветрозащитной вставкой'};
+ const clear=w.day&&w.code<3;
+ a.push(clear&&w.uv>=3?{s:'n',t:'Очки с UV-защитой (категория 3, маркировка UV400)'+(k<=0?', лучше с поляризацией: снег сильно слепит':'')}:clear||(w.day&&w.uv>=3)?{s:'o',t:'Очки с UV-защитой, если чувствительны к свету'}:{s:'x',t:'Не нужны'});
  return a;}
 function render(w){
  LW=w;if(!G){sky(w);gate();return}
- const e=adj(w.ap,w.hum),k=kOf(e),L=fem(K[k+6],k),AC=accs(k,w);sky(w);
- const parts=w.parts.map((p,i)=>{const kk=kOf(adj(p,w.hum));return `<div><small>${['Утро','День','Вечер'][i]}</small><b>${f(p)}°</b>${esc(K[kk+6][1])}</div>`}).join('');
+ const h0=adj(w.ap,w.hum),e=h0+OF(),k=kOf(e),L=over(fem(K[k+6],k),k),AC=accs(k,w);sky(w);
+ const parts=w.parts.map((p,i)=>{const kk=kOf(adj(p,w.hum)+OF());return `<div><small>${['Утро','День','Вечер'][i]}</small><b>${f(p)}°</b>${esc(over(fem(K[kk+6],kk),kk)[1])}</div>`}).join('');
  $('#app').innerHTML=(w.live?'':'<p class="demo">Демо-данные по Москве. Здесь нет доступа к Open-Meteo, поэтому выбор города не работает: на вашем хостинге он заработает с живой погодой.</p>')+
  `<p class="city">${esc(w.city)}</p><p class="temp">${f(w.t)}°</p><p class="sub">${WTXT(w.code)}, ощущается как ${f(w.ap)}°</p>
+ <div class="modes">${MODES.map(([v,t])=>`<button data-m="${v}" aria-pressed="${M===v}">${t}</button>`).join('')}</div>
+ ${(w.alerts||[]).map(t=>`<p class="alert">${esc(t)}</p>`).join('')}
  <div class="facts"><div>${FI[0]}<b>${w.hum}%</b>влажность</div><div>${FI[1]}<b>${Math.round(w.pres*.75006)}</b>мм рт. ст.</div><div>${FI[2]}<b>${Math.round(w.gust)}</b>порывы, км/ч</div><div>${FI[3]}<b>${Math.round(w.uv)}</b>УФ</div></div>
- <h2>Что надеть</h2><p class="band">${e<w.ap?`Влажность ${w.hum}% усиливает холод (${f(e-w.ap)}°), поэтому образ подобран как для ${f(e)}°`:e>w.ap?`Влажность ${w.hum}% усиливает жару (+${Math.round(e-w.ap)}°), поэтому образ подобран как для ${f(e)}°`:`Образ подобран по ощущаемой температуре ${f(e)}°`}. Диапазон ${bandName(k)}.</p>
- <ul class="look">${L.map((t,i)=>`<li><span>${ICON[i+1]}</span><div><small>${LBL[i]}</small>${esc(t)}<small class="alt">Аналог: ${esc(ALT(k)[i])}</small></div></li>`).join('')}</ul>
+ <h2>Что надеть</h2><p class="band">${h0<w.ap?`Влажность ${w.hum}% усиливает холод (${f(h0-w.ap)}°), поэтому образ подобран как для ${f(e)}°`:h0>w.ap?`Влажность ${w.hum}% усиливает жару (+${Math.round(h0-w.ap)}°), поэтому образ подобран как для ${f(e)}°`:`Образ подобран по ощущаемой температуре ${f(e)}°`}. Диапазон ${bandName(k)}.${P?` Учтена ваша поправка ${pf()}°.`:''}</p>
+ <ul class="look">${L.map((t,i)=>`<li><span>${ICON[i+1]}</span><div><small>${LBL[i]}</small>${esc(t)}${M==='daily'?`<small class="alt">Аналог: ${esc(ALT(k)[i])}</small>`:''}</div></li>`).join('')}</ul>
  <h2>Головной убор, носки, шарф</h2><p class="band">Пометка показывает, нужна ли вещь в такую погоду</p>
  <ul class="look">${AC.map((x,i)=>`<li${x.s==='x'?' style="opacity:.65"':''}><span>${ICON[AI[i]]}</span><div><small>${AL[i]}<em class="tag ${x.s}">${TG[x.s]}</em></small>${esc(x.t)}${x.s!=='x'&&ALA(k)[i]?`<small class="alt">Аналог: ${esc(ALA(k)[i])}</small>`:''}</div></li>`).join('')}</ul>
  <h2>Особенности сегодня</h2><div class="notes">${notes(w).map(t=>`<p>${esc(t)}</p>`).join('')||'<p>Особых предупреждений нет.</p>'}</div>
- <h2>Верхняя одежда в течение дня</h2><div class="parts">${parts}</div>`;}
-const DEMO={city:'Москва',lat:55.75,lon:37.62,elev:150,t:6,ap:3,hum:88,pres:1004,dp:-7,gust:38,uv:1,pp:70,code:61,day:true,tmax:8,tmin:2,parts:[1,5,3],live:false};
+ <h2>Верхняя одежда в течение дня</h2><div class="parts">${parts}</div>${survey()}`;}
+const DEMO={city:'Москва',lat:55.75,lon:37.62,elev:150,t:6,ap:3,hum:88,pres:1004,dp:-7,gust:38,uv:1,pp:70,code:61,day:true,tmax:8,tmin:2,parts:[1,5,3],alerts:['Через 3 ч (около 15:00) ожидается дождь, примерно до 19:00. Зонт и водоотталкивающая обувь нужны именно в это время.','С 21:00 температура около 0° или ниже после осадков: возможен гололёд. Обувь с протектором, шаги мельче.'],live:false};
+function alerts(H,h){const a=[],T=H.time,N=Math.min(h+14,T.length-1),hh=i=>T[i].slice(11,16),wet=i=>H.precipitation_probability[i]>=50||H.precipitation[i]>=.3||rain(H.weather_code[i]),sn=i=>snow(H.weather_code[i]);
+ let s=-1;for(let i=h;i<=N;i++)if(wet(i)||sn(i)){s=i;break}
+ if(s>=0){let e=s;while(e<N&&(wet(e+1)||sn(e+1)))e++;const what=sn(s)?'снег':'дождь',end=hh(Math.min(e+1,T.length-1));
+  a.push(s===h?`Сейчас ${what}, продлится примерно до ${end}. Нужны непромокаемая верхняя одежда и зонт.`:`Через ${s-h} ч (около ${hh(s)}) ожидается ${what}${e>s?', примерно до '+end:''}. Зонт и водоотталкивающая обувь нужны именно в это время.`)}
+ for(let i=h;i<=N;i++){const c=H.weather_code[i];if(c===56||c===57||c===66||c===67){a.push(`Около ${hh(i)} возможен ледяной дождь, будет очень скользко. Обувь с рифлёной подошвой, без необходимости лучше не выходить.`);return a}}
+ for(let i=h;i<=N;i++){if(H.temperature_2m[i]<=0.5){let w=false;for(let j=Math.max(0,i-8);j<=i;j++)if(H.precipitation[j]>=.1||rain(H.weather_code[j]))w=true;if(w){a.push(`С ${hh(i)} температура около 0° или ниже после осадков: возможен гололёд. Обувь с протектором, шаги мельче.`);break}}}
+ return a}
 async function load(lat,lon,city){
  try{const c=new AbortController();setTimeout(()=>c.abort(),7000);
-  const u=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,surface_pressure,wind_gusts_10m,weather_code,is_day&hourly=apparent_temperature,surface_pressure,precipitation_probability,uv_index&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=2`;
+  const u=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,surface_pressure,wind_gusts_10m,weather_code,is_day&hourly=apparent_temperature,surface_pressure,precipitation_probability,uv_index,temperature_2m,weather_code,precipitation&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=2`;
   const d=await (await fetch(u,{signal:c.signal})).json(),cu=d.current,h=parseInt(cu.time.slice(11,13)),H=d.hourly;
   const day=H.uv_index.slice(0,24);
-  render({city,lat,lon,elev:d.elevation,t:cu.temperature_2m,ap:cu.apparent_temperature,hum:cu.relative_humidity_2m,pres:cu.surface_pressure,dp:H.surface_pressure[h+3]-H.surface_pressure[h],gust:cu.wind_gusts_10m,uv:Math.max(...day),pp:Math.max(...H.precipitation_probability.slice(h,24)),code:cu.weather_code,day:!!cu.is_day,tmax:d.daily.temperature_2m_max[0],tmin:d.daily.temperature_2m_min[0],parts:[8,14,20].map(i=>H.apparent_temperature[i]),live:true});
+  render({city,lat,lon,elev:d.elevation,t:cu.temperature_2m,ap:cu.apparent_temperature,hum:cu.relative_humidity_2m,pres:cu.surface_pressure,dp:H.surface_pressure[h+3]-H.surface_pressure[h],gust:cu.wind_gusts_10m,uv:Math.max(...day),pp:Math.max(...H.precipitation_probability.slice(h,24)),code:cu.weather_code,day:!!cu.is_day,tmax:d.daily.temperature_2m_max[0],tmin:d.daily.temperature_2m_min[0],parts:[8,14,20].map(i=>H.apparent_temperature[i]),alerts:alerts(H,h),live:true});
   try{localStorage.setItem('last',JSON.stringify({lat,lon,city}))}catch(e){}
  }catch(e){render(DEMO)}}
 async function find(name){
@@ -161,6 +200,8 @@ $('#geo').onclick=()=>navigator.geolocation&&navigator.geolocation.getCurrentPos
 $('#chips').innerHTML=['Москва','Сочи','Якутск','Франкфурт','Бангкок','Дубай'].map(c=>`<button>${c}</button>`).join('');
 $('#chips').onclick=async e=>{if(e.target.tagName!=='BUTTON')return;const r=await find(e.target.textContent);r&&r[0]?load(r[0].latitude,r[0].longitude,r[0].name):load(0,0,e.target.textContent)};
 $('#app').addEventListener('click',e=>{const b=e.target.closest('button[data-g]');if(!b)return;G=b.dataset.g;try{localStorage.setItem('g',G)}catch(x){}LW&&render(LW)});
+$('#app').addEventListener('click',e=>{const b=e.target.closest('button[data-m]');if(!b)return;M=b.dataset.m;try{localStorage.setItem('m',M)}catch(x){}LW&&render(LW)});
+$('#app').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;if(d.s){SV='w';SW=null}else if(d.w){SW=d.w;SV='f'}else if(d.f){rate(SW,d.f);SV=null}else if(d.r){P=0;HS.forEach(x=>x.dl=0);save()}else return;LW&&render(LW)});
 $('#prof').onclick=()=>{G=null;LW&&render(LW)};
 let last=null;try{last=JSON.parse(localStorage.getItem('last'))}catch(e){}
 last?load(last.lat,last.lon,last.city):load(DEMO.lat,DEMO.lon,DEMO.city);
